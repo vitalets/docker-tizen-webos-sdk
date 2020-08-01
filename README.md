@@ -8,13 +8,14 @@ Available CLI commands:
 * `ares-*`
 
 ## Requirements
+The only requirement is docker:
 * for Mac/Windows - [Docker Desktop](https://www.docker.com/products/docker-desktop) 
 * for Linux - [Docker Engine](https://docs.docker.com/engine/install/) 
 
 ## Usage
 Run `bash` session inside container:
 ```
-docker run -it --rm vitalets/tizen-webos-sdk bash
+docker run -it --rm -v webos:/.webos vitalets/tizen-webos-sdk bash
 ```
 Now you have Ubuntu with `sdb`, `tizen`, and `ares-*` commands available:
 ```
@@ -27,6 +28,11 @@ Smart Development Bridge version 4.2.12
 $ ares-setup-device --version
 Version: 1.10.4-j1703-k
 ```
+
+> Container is intentionally started under the `root` user.
+  Starting under non-root user will cause [permissions issue](https://github.com/moby/moby/issues/2259)
+  when attaching volumes.
+
 ### Samsung Tizen TV
 #### Get info about Samsung TV
 If you have Samsung TV with IP `192.168.1.66` in the same network as your host machine, you can get TV info: 
@@ -221,6 +227,7 @@ docker run -it --rm \
   -e TV_IP=192.168.1.66 \
   -e APP_ID=TESTABCDEF.MyTvApp \
   -e APP_NAME="My TV App" \
+  -v webos:/.webos
   -v ./src:/app \
   vitalets/tizen-webos-sdk /bin/bash -c '\
   tizen package -t wgt -o . -- /app \
@@ -238,6 +245,23 @@ tbd
 #### Build container
 ```bash
 docker build -t vitalets/tizen-webos-sdk .
+```
+For faster builds during development you can download Tizen Studio installer to `vendor` dir:
+```bash
+wget http://download.tizen.org/sdk/Installer/tizen-studio_3.7/web-cli_Tizen_Studio_3.7_ubuntu-64.bin \
+-O vendor/web-cli_Tizen_Studio_3.7_ubuntu-64.bin
+```
+and use local file in docker build:
+```bash
+docker run -d --name nginx-temp -p 8080:80 -v $(pwd)/vendor:/usr/share/nginx/html:ro nginx \
+&& docker build -t vitalets/tizen-webos-sdk . \
+  --build-arg TIZEN_STUDIO_URL=http://host.docker.internal:8080/web-cli_Tizen_Studio_3.7_ubuntu-64.bin \
+; docker rm --force nginx-temp
+```
+
+#### Test
+```bash
+./test.sh
 ```
 
 #### Publish to Docker Hub

@@ -1,2 +1,6 @@
+.git
 .idea
+.editorconfig
+
+test.sh
 /vendor/web-cli_Tizen_Studio_*

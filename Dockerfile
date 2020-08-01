@@ -43,9 +43,11 @@ RUN touch .sudo_as_admin_successful
 
 # Install tizen studio
 # See: https://developer.tizen.org/development/tizen-studio/download/installing-tizen-studio#cli_installer
+# Install as 'developer' as Tizen Studio does not allow to install from root.
 ARG TIZEN_STUDIO_VERSION=3.7
 ARG TIZEN_STUDIO_FILE=web-cli_Tizen_Studio_${TIZEN_STUDIO_VERSION}_ubuntu-64.bin
-RUN wget http://download.tizen.org/sdk/Installer/tizen-studio_${TIZEN_STUDIO_VERSION}/${TIZEN_STUDIO_FILE} \
+ARG TIZEN_STUDIO_URL=http://download.tizen.org/sdk/Installer/tizen-studio_${TIZEN_STUDIO_VERSION}/${TIZEN_STUDIO_FILE}
+RUN wget ${TIZEN_STUDIO_URL} \
   && chmod +x ${TIZEN_STUDIO_FILE} \
   && echo y | ./${TIZEN_STUDIO_FILE} --accept-license \
   && rm ${TIZEN_STUDIO_FILE}
@@ -60,6 +62,14 @@ RUN unzip -q webos_cli_tv.zip -d webOS_TV_SDK \
   && chmod -R +x webOS_TV_SDK/CLI/bin \
   && rm webos_cli_tv.zip
 
+# Set path for webos data dir (.webos).
+# Used '/' just to have shorter path in volume binds (-v webos:/.webos).
+ENV APPDATA /
+
 # Add tizen/webos cli to PATH
 ENV PATH $PATH:$HOME/tizen-studio/tools/:$HOME/tizen-studio/tools/ide/bin/:$HOME/tizen-studio/package-manager/:$HOME/webOS_TV_SDK/CLI/bin
 
+# Container is intentionally started under the root user.
+# Starting under non-root user will cause permissions issue when attaching volumes
+# See: https://github.com/moby/moby/issues/2259
+USER root
