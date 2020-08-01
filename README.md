@@ -1,11 +1,41 @@
 # docker-tizen-webos-sdk
-[Samsung Tizen CLI](https://developer.samsung.com/smarttv/develop/getting-started/using-sdk/command-line-interface.html)
-and [LG webOS CLI](http://webostv.developer.lge.com/sdk/tools/using-webos-tv-cli/) bundled as docker container.
+Docker image with [Samsung Tizen CLI](https://developer.samsung.com/smarttv/develop/getting-started/using-sdk/command-line-interface.html)
+and [LG webOS CLI](http://webostv.developer.lge.com/sdk/tools/using-webos-tv-cli/).
 Allows to develop, build, launch and debug Smart TV apps without installing Tizen Studio and webOS SDK.
 Available CLI commands:
 * `tizen`
 * `sdb`
 * `ares-*`
+
+## Contents
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [Requirements](#requirements)
+- [Usage](#usage)
+  - [Samsung Tizen TV](#samsung-tizen-tv)
+    - [Get info about Samsung TV](#get-info-about-samsung-tv)
+    - [Connect to Samsung TV](#connect-to-samsung-tv)
+    - [List connected TVs](#list-connected-tvs)
+    - [Get TV capabilities](#get-tv-capabilities)
+    - [Get list of installed apps](#get-list-of-installed-apps)
+    - [Launch app on TV](#launch-app-on-tv)
+    - [Pack app](#pack-app)
+    - [Install app](#install-app)
+    - [Debug app](#debug-app)
+    - [Close app](#close-app)
+    - [Uninstall app](#uninstall-app)
+    - [Pack, install and launch app on TV in single command](#pack-install-and-launch-app-on-tv-in-single-command)
+  - [LG WebOS TV](#lg-webos-tv)
+- [Development](#development)
+    - [Build container](#build-container)
+    - [Test](#test)
+    - [Generate TOC in README.md](#generate-toc-in-readmemd)
+    - [Publish to Docker Hub](#publish-to-docker-hub)
+    - [Prune unused images](#prune-unused-images)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Requirements
 The only requirement is docker:
@@ -264,7 +294,17 @@ docker run -d --name nginx-temp -p 8080:80 -v $(pwd)/vendor:/usr/share/nginx/htm
 ./test.sh
 ```
 
+#### Generate TOC in README.md
+```
+docker run --rm -it -v $(pwd):/usr/src jorgeandrada/doctoc --github README.md
+```
+
 #### Publish to Docker Hub
 ```bash
 docker push vitalets/tizen-webos-sdk
+```
+
+#### Prune unused images
+```bash
+docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
 ```
