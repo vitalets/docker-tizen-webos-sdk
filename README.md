@@ -14,33 +14,33 @@ Available CLI commands:
 
 - [Requirements](#requirements)
 - [Usage](#usage)
-  - [Samsung Tizen TV](#samsung-tizen-tv)
-    - [Get info about Samsung TV](#get-info-about-samsung-tv)
-    - [Connect to Samsung TV](#connect-to-samsung-tv)
-    - [List connected TVs](#list-connected-tvs)
-    - [Get TV capabilities](#get-tv-capabilities)
-    - [Get list of installed apps](#get-list-of-installed-apps)
-    - [Launch app on TV](#launch-app-on-tv)
-    - [Pack app](#pack-app)
-    - [Install app](#install-app)
-    - [Debug app](#debug-app)
-    - [Close app](#close-app)
-    - [Uninstall app](#uninstall-app)
-    - [Pack, install and launch app on TV in single command](#pack-install-and-launch-app-on-tv-in-single-command)
-  - [LG WebOS TV](#lg-webos-tv)
+- [Samsung Tizen TV CLI](#samsung-tizen-tv-cli)
+  - [Get info about TV](#get-info-about-tv)
+  - [Connect to TV](#connect-to-tv)
+  - [List connected TVs](#list-connected-tvs)
+  - [Get TV capabilities](#get-tv-capabilities)
+  - [Get list of installed apps](#get-list-of-installed-apps)
+  - [Launch app on TV](#launch-app-on-tv)
+  - [Pack app](#pack-app)
+  - [Install app](#install-app)
+  - [Debug app](#debug-app)
+  - [Close app](#close-app)
+  - [Uninstall app](#uninstall-app)
+  - [Pack, install and launch app on TV in single command](#pack-install-and-launch-app-on-tv-in-single-command)
+- [LG WebOS TV CLI](#lg-webos-tv-cli)
 - [Development](#development)
-    - [Build container](#build-container)
-    - [Test](#test)
-    - [Generate TOC in README.md](#generate-toc-in-readmemd)
-    - [Publish to Docker Hub](#publish-to-docker-hub)
-    - [Prune unused images](#prune-unused-images)
+  - [Build container](#build-container)
+  - [Test](#test)
+  - [Generate TOC in README](#generate-toc-in-readme)
+  - [Publish to Docker Hub](#publish-to-docker-hub)
+  - [Remove unused images](#remove-unused-images)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Requirements
 The only requirement is docker:
-* for Mac/Windows - [Docker Desktop](https://www.docker.com/products/docker-desktop) 
-* for Linux - [Docker Engine](https://docs.docker.com/engine/install/) 
+* for Mac/Windows - [Docker Desktop](https://www.docker.com/products/docker-desktop)
+* for Linux - [Docker Engine](https://docs.docker.com/engine/install/)
 
 ## Usage
 Run `bash` session inside container:
@@ -63,14 +63,14 @@ Version: 1.10.4-j1703-k
   Starting under non-root user will cause [permissions issue](https://github.com/moby/moby/issues/2259)
   when attaching volumes.
 
-### Samsung Tizen TV
-#### Get info about Samsung TV
-If you have Samsung TV with IP `192.168.1.66` in the same network as your host machine, you can get TV info: 
+## Samsung Tizen TV CLI
+### Get info about TV
+If you have Samsung TV with IP `192.168.1.66` in the same network as your host machine, you can get TV info:
 ```
 curl http://192.168.1.66:8001/api/v2/
 ```
 <details>
- <summary>Example response</summary>
+ <summary>Output</summary>
 
     {
        "device":{
@@ -113,52 +113,63 @@ curl http://192.168.1.66:8001/api/v2/
     }
 </details>
 
-#### Connect to Samsung TV 
+### Connect to TV
+Before running any `tizen` / `sdb` command you should connect to TV.
 Please ensure that TV is in [Developer Mode](https://developer.samsung.com/smarttv/develop/getting-started/using-sdk/tv-device.html)
 and Developer IP equals to your host IP (check `developerMode` and `developerIP` in curl response).
-```
+```bash
 $ sdb connect 192.168.1.66
-
+```
+Output:
+```
 * Server is not running. Start it now on port 26099 *
 * Server has started successfully *
 connecting to 192.168.1.66:26101 ...
 connected to 192.168.1.66:26101
 ```
 
-#### List connected TVs
+### List connected TVs
 ```
 $ sdb devices
-
-List of devices attached 
+```
+Output:
+```
+List of devices attached
 192.168.1.66:26101      device          UE43RU7400UXRU
 ```
 
-#### Get TV capabilities
+### Get TV capabilities
 ```
 $ sdb -s 192.168.1.66 capability
-
+```
+Output:
+```
 secure_protocol:enabled
 intershell_support:disabled
 filesync_support:pushpull
 ...
 ```
 
-#### Get list of installed apps
+### Get list of installed apps
 ```
 $ sdb -s 192.168.1.66 shell 0 applist
-
+```
+Output:
+```
 Application List for user 5001
-User's Application 
-Name               AppID 
+User's Application
+Name               AppID
 =================================================
 'HdmiCec'         'org.tizen.hdmicec'
 'automation-app'  'org.tizen.automation-app'
 ...
 ```
-#### Launch app on TV
+### Launch app on TV
 ```
 $ tizen run -s 192.168.1.66:26101 -p 9Ur5IzDKqV.TizenYouTube
-
+```
+Output:
+```
 Launching the Tizen application...
 --------------------
 Platform log view
@@ -171,7 +182,7 @@ or
 $ sdb -s 192.168.1.66:26101 shell 0 was_execute 9Ur5IzDKqV.TizenYouTube
 ```
 
-#### Pack app
+### Pack app
 Sample developer certificate is included, so you can pack your app without any setup (for development).
 Author.p12 / distributor.p12 password is `developer`.
 Run container with mounting app source `./src` into `/app`:
@@ -181,7 +192,9 @@ docker run -it --rm -v ./src:/app vitalets/tizen-webos-sdk bash
 Create `wgt` package:
 ```
 tizen package -t wgt -o /home/developer -- /app
-
+```
+Output:
+```
 The active profile is used for signing. If you want to sign with other profile, please use '--sign' option.
 Author certficate: /home/developer/author.p12
 Distributor1 certificate : /home/developer/tizen-studio/tools/certificate-generator/certificates/distributor/tizen-distributor-signer.p12
@@ -190,10 +203,12 @@ Ignore File: /app/.manifest.tmp
 Package File Location: /home/developer/MyTvApp.wgt
 ```
 
-#### Install app 
+### Install app
 ```
 $ tizen install -s 192.168.1.66:26101 --name MyTvApp.wgt -- /home/developer
-
+```
+Output:
+```
 Transferring the package...
 Transferred the package: /home/developer/MyTvApp.wgt -> /home/owner/share/tmp/sdk_tools/tmp
 Installing the package...
@@ -215,25 +230,34 @@ Total time: 00:00:02.895
 > You may need to rename wgt before installing
 > because `tizen install` does not work properly with spaces and non-latin symbols in wgt filename
 
-#### Debug app
+### Debug app
 Launch app in debug mode:
 ```
 $ sdb -s 192.168.1.66:26101 shell 0 debug TESTABCDEF.MyTvApp
-
+```
+Output:
+```
 ... successfully launched pid = 12915 with debug 1 port: 34541
 ```
 Then open in chrome url `http://{TV_IP}:{PORT}` using port from previous command.
 
-#### Close app
+### Close app
 ```
 $ sdb -s 192.168.1.66:26101 shell 0 kill TESTABCDEF
 ```
+Output:
+```
+Pkgid: TESTABCDEF is Terminated
+spend time for pkgcmd is [246]ms
+```
 > Note using only `packageId` instead of full `appId`.
 
-#### Uninstall app
+### Uninstall app
 ```
 $ tizen uninstall -s 192.168.1.66:26101 -p TESTABCDEF.MyTvApp
-
+```
+Output:
+```
 --------------------
 Platform log view
 --------------------
@@ -246,7 +270,7 @@ cmd_ret:0
 Total time: 00:00:02.703
 ```
 
-#### Pack, install and launch app on TV in single command
+### Pack, install and launch app on TV in single command
 App sources are in `./src`.
 The following env variables are used:
 - `TV_IP=192.168.1.66`
@@ -267,12 +291,12 @@ docker run -it --rm \
   && tizen run -s $TV_IP:26101 -p $APP_ID'
 ```
 
-### LG WebOS TV
+## LG WebOS TV CLI
 tbd
 
 ## Development
 
-#### Build container
+### Build container
 ```bash
 docker build -t vitalets/tizen-webos-sdk .
 ```
@@ -289,22 +313,22 @@ docker run -d --name nginx-temp -p 8080:80 -v $(pwd)/vendor:/usr/share/nginx/htm
 ; docker rm --force nginx-temp
 ```
 
-#### Test
+### Test
 ```bash
 ./test.sh
 ```
 
-#### Generate TOC in README.md
+### Generate TOC in README
 ```
 docker run --rm -it -v $(pwd):/usr/src jorgeandrada/doctoc --github README.md
 ```
 
-#### Publish to Docker Hub
+### Publish to Docker Hub
 ```bash
 docker push vitalets/tizen-webos-sdk
 ```
 
-#### Prune unused images
+### Remove unused images
 ```bash
 docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
 ```
