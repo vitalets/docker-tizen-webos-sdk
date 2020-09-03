@@ -30,7 +30,8 @@ Available CLI commands:
 - [LG WebOS TV CLI](#lg-webos-tv-cli)
 - [Development](#development)
   - [Build container](#build-container)
-  - [Build container during development](#build-container-during-development)
+      - [Slow way](#slow-way)
+      - [Fast way](#fast-way)
   - [Test](#test)
   - [Generate TOC](#generate-toc)
   - [Publish to Docker Hub](#publish-to-docker-hub)
@@ -46,17 +47,19 @@ The only requirement is docker:
 ## Usage
 Run `bash` session inside container:
 ```
-docker run -it --rm -v webos:/.webos vitalets/tizen-webos-sdk bash
+docker run -it --rm -v tvdata:/home/developer vitalets/tizen-webos-sdk bash
 ```
+> Named volume `tvdata` is important for saving your data between container runs.
+
 Now you have Ubuntu with `sdb`, `tizen`, and `ares-*` commands available:
 ```
-$ tizen version
+~# tizen version
 Tizen CLI 2.5.21
 
-$ sdb version
+~# sdb version
 Smart Development Bridge version 4.2.12
 
-$ ares-setup-device --version
+~# ares-setup-device --version
 Version: 1.10.4-j1703-k
 ```
 
@@ -66,12 +69,15 @@ Version: 1.10.4-j1703-k
 
 ## Samsung Tizen TV CLI
 ### Get info about TV
-If you have Samsung TV with IP `192.168.1.66` in the same network as your host machine, you can get TV info:
+If you have Samsung TV in the same network as your host machine,
+you can get TV info from inside the container:
 ```
-curl http://192.168.1.66:8001/api/v2/
+curl http://TV_IP:8001/api/v2/
 ```
+> You may be asked on TV to allow external connections (once).
+
 <details>
- <summary>Output</summary>
+ <summary>Example Output</summary>
 
     {
        "device":{
@@ -188,7 +194,7 @@ Sample developer certificate is included, so you can pack your app without any s
 Author.p12 / distributor.p12 password is `developer`.
 Run container with mounting app source `./src` into `/app`:
 ```
-docker run -it --rm -v ./src:/app vitalets/tizen-webos-sdk bash
+docker run -it --rm -v ./src:/app -v tvdata:/home/developer vitalets/tizen-webos-sdk bash
 ```
 Create `wgt` package:
 ```
@@ -282,7 +288,7 @@ docker run -it --rm \
   -e TV_IP=192.168.1.66 \
   -e APP_ID=TESTABCDEF.MyTvApp \
   -e APP_NAME="My TV App" \
-  -v webos:/.webos
+  -v tvdata:/home/developer
   -v ./src:/app \
   vitalets/tizen-webos-sdk /bin/bash -c '\
   tizen package -t wgt -o . -- /app \
@@ -298,23 +304,24 @@ tbd
 ## Development
 
 ### Build container
+##### Slow way
 ```bash
 docker build -t vitalets/tizen-webos-sdk .
 ```
-### Build container during development
-1.Download Tizen Studio installer to `vendor` dir (once):
-```bash
-wget http://download.tizen.org/sdk/Installer/tizen-studio_3.7/web-cli_Tizen_Studio_3.7_ubuntu-64.bin \
--O vendor/web-cli_Tizen_Studio_3.7_ubuntu-64.bin
-```
+##### Fast way
+1. Download Tizen Studio installer to `vendor` dir (once):
+    ```bash
+    wget http://download.tizen.org/sdk/Installer/tizen-studio_3.7/web-cli_Tizen_Studio_3.7_ubuntu-64.bin \
+    -O vendor/web-cli_Tizen_Studio_3.7_ubuntu-64.bin
+    ```
 
-2.Build container using local Tizen Studio installer:
-```bash
-docker run -d --rm --name nginx-temp -p 8080:80 -v $(pwd)/vendor:/usr/share/nginx/html:ro nginx \
-&& docker build -t vitalets/tizen-webos-sdk . \
-  --build-arg TIZEN_STUDIO_URL=http://host.docker.internal:8080/web-cli_Tizen_Studio_3.7_ubuntu-64.bin \
-; docker stop nginx-temp
-```
+2. Build container using local Tizen Studio installer:
+    ```bash
+    docker run -d --rm --name nginx-temp -p 8080:80 -v $(pwd)/vendor:/usr/share/nginx/html:ro nginx \
+    && docker build -t vitalets/tizen-webos-sdk . \
+      --build-arg TIZEN_STUDIO_URL=http://host.docker.internal:8080/web-cli_Tizen_Studio_3.7_ubuntu-64.bin \
+    ; docker stop nginx-temp
+    ```
 
 ### Test
 ```bash

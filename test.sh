@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 cmd() {
-  echo $(docker run -it --rm -v /.webos vitalets/tizen-webos-sdk $@) | tr -d '\r'
+  echo $(docker run -it --rm -v /home/developer vitalets/tizen-webos-sdk $@) | tr -d '\r'
 }
 
 assert() {
