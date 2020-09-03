@@ -62,6 +62,9 @@ RUN unzip -q webos_cli_tv.zip -d webOS_TV_SDK \
   && chmod -R +x webOS_TV_SDK/CLI/bin \
   && rm webos_cli_tv.zip
 
+# Replace lib/deviceInfo.js with patched version until it will be officially released
+COPY --chown=${USER} vendor/deviceInfo-patched.js webOS_TV_SDK/CLI/lib/deviceInfo.js
+
 # Set path for webos data dir (.webos).
 # Used '/' just to have shorter path in volume binds (-v webos:/.webos).
 ENV APPDATA /
