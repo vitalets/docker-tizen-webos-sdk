@@ -30,8 +30,9 @@ Available CLI commands:
 - [LG WebOS TV CLI](#lg-webos-tv-cli)
 - [Development](#development)
   - [Build container](#build-container)
+  - [Build container during development](#build-container-during-development)
   - [Test](#test)
-  - [Generate TOC in README](#generate-toc-in-readme)
+  - [Generate TOC](#generate-toc)
   - [Publish to Docker Hub](#publish-to-docker-hub)
   - [Remove unused images](#remove-unused-images)
 
@@ -300,17 +301,19 @@ tbd
 ```bash
 docker build -t vitalets/tizen-webos-sdk .
 ```
-For faster builds during development you can download Tizen Studio installer to `vendor` dir:
+### Build container during development
+1.Download Tizen Studio installer to `vendor` dir (once):
 ```bash
 wget http://download.tizen.org/sdk/Installer/tizen-studio_3.7/web-cli_Tizen_Studio_3.7_ubuntu-64.bin \
 -O vendor/web-cli_Tizen_Studio_3.7_ubuntu-64.bin
 ```
-and use local file in docker build:
+
+2.Build container using local Tizen Studio installer:
 ```bash
-docker run -d --name nginx-temp -p 8080:80 -v $(pwd)/vendor:/usr/share/nginx/html:ro nginx \
+docker run -d --rm --name nginx-temp -p 8080:80 -v $(pwd)/vendor:/usr/share/nginx/html:ro nginx \
 && docker build -t vitalets/tizen-webos-sdk . \
   --build-arg TIZEN_STUDIO_URL=http://host.docker.internal:8080/web-cli_Tizen_Studio_3.7_ubuntu-64.bin \
-; docker rm --force nginx-temp
+; docker stop nginx-temp
 ```
 
 ### Test
@@ -318,7 +321,7 @@ docker run -d --name nginx-temp -p 8080:80 -v $(pwd)/vendor:/usr/share/nginx/htm
 ./test.sh
 ```
 
-### Generate TOC in README
+### Generate TOC
 ```
 docker run --rm -it -v $(pwd):/usr/src jorgeandrada/doctoc --github README.md
 ```
