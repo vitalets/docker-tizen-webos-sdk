@@ -1,2 +1,6 @@
+.DS_Store
 .idea
+.vscode
+
 /vendor/web-cli_Tizen_Studio_*
+/todo.txt
