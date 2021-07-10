@@ -12,30 +12,32 @@ Available CLI commands:
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 
-- [Requirements](#requirements)
-- [Usage](#usage)
-- [Samsung Tizen TV CLI](#samsung-tizen-tv-cli)
-  - [Get info about TV](#get-info-about-tv)
-  - [Connect to TV](#connect-to-tv)
-  - [List connected TVs](#list-connected-tvs)
-  - [Get TV capabilities](#get-tv-capabilities)
-  - [Get list of installed apps](#get-list-of-installed-apps)
-  - [Launch app on TV](#launch-app-on-tv)
-  - [Pack app](#pack-app)
-  - [Install app](#install-app)
-  - [Debug app](#debug-app)
-  - [Close app](#close-app)
-  - [Uninstall app](#uninstall-app)
-  - [Pack, install and launch app on TV in single command](#pack-install-and-launch-app-on-tv-in-single-command)
-- [LG WebOS TV CLI](#lg-webos-tv-cli)
-- [Development](#development)
-  - [Build container](#build-container)
-      - [Slow way](#slow-way)
-      - [Fast way](#fast-way)
-  - [Test](#test)
-  - [Generate TOC](#generate-toc)
-  - [Publish to Docker Hub](#publish-to-docker-hub)
-  - [Remove unused images](#remove-unused-images)
+- [docker-tizen-webos-sdk](#docker-tizen-webos-sdk)
+  - [Contents](#contents)
+  - [Requirements](#requirements)
+  - [Usage](#usage)
+  - [Samsung Tizen TV CLI](#samsung-tizen-tv-cli)
+    - [Get info about TV](#get-info-about-tv)
+    - [Connect to TV](#connect-to-tv)
+    - [List connected TVs](#list-connected-tvs)
+    - [Get TV capabilities](#get-tv-capabilities)
+    - [Get list of installed apps](#get-list-of-installed-apps)
+    - [Launch app on TV](#launch-app-on-tv)
+    - [Pack app](#pack-app)
+    - [Install app](#install-app)
+    - [Debug app](#debug-app)
+    - [Close app](#close-app)
+    - [Uninstall app](#uninstall-app)
+    - [Pack, install and launch app on TV in single command](#pack-install-and-launch-app-on-tv-in-single-command)
+  - [LG WebOS TV CLI](#lg-webos-tv-cli)
+  - [Development](#development)
+    - [Build container](#build-container)
+        - [Slow way](#slow-way)
+        - [Fast way](#fast-way)
+    - [Test](#test)
+    - [Generate TOC](#generate-toc)
+    - [Publish to Docker Hub](#publish-to-docker-hub)
+    - [Remove unused images](#remove-unused-images)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -311,15 +313,17 @@ docker build -t vitalets/tizen-webos-sdk .
 ##### Fast way
 1. Download Tizen Studio installer to `vendor` dir (once):
     ```bash
-    wget http://download.tizen.org/sdk/Installer/tizen-studio_3.7/web-cli_Tizen_Studio_3.7_ubuntu-64.bin \
-    -O vendor/web-cli_Tizen_Studio_3.7_ubuntu-64.bin
+    TIZEN_STUDIO_VERSION=4.1.1; \
+    wget http://download.tizen.org/sdk/Installer/tizen-studio_${TIZEN_STUDIO_VERSION}/web-cli_Tizen_Studio_${TIZEN_STUDIO_VERSION}_ubuntu-64.bin \
+    -O vendor/web-cli_Tizen_Studio_${TIZEN_STUDIO_VERSION}_ubuntu-64.bin
     ```
 
 2. Build container using local Tizen Studio installer:
     ```bash
+    TIZEN_STUDIO_VERSION=4.1.1; \
     docker run -d --rm --name nginx-temp -p 8080:80 -v $(pwd)/vendor:/usr/share/nginx/html:ro nginx \
     && docker build -t vitalets/tizen-webos-sdk . \
-      --build-arg TIZEN_STUDIO_URL=http://host.docker.internal:8080/web-cli_Tizen_Studio_3.7_ubuntu-64.bin \
+      --build-arg TIZEN_STUDIO_URL=http://host.docker.internal:8080/web-cli_Tizen_Studio_${TIZEN_STUDIO_VERSION}_ubuntu-64.bin \
     ; docker stop nginx-temp
     ```
 
