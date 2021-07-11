@@ -30,6 +30,9 @@ Available CLI commands:
     - [Uninstall app](#uninstall-app)
     - [Pack, install and launch app on TV in single command](#pack-install-and-launch-app-on-tv-in-single-command)
   - [LG WebOS TV CLI](#lg-webos-tv-cli)
+  - [Changelog](#changelog)
+      - [2.0](#20)
+      - [1.0](#10)
   - [Development](#development)
     - [Build container](#build-container)
         - [Slow way](#slow-way)
@@ -303,6 +306,14 @@ docker run -it --rm \
 
 ## LG WebOS TV CLI
 tbd
+
+## Changelog
+#### 2.0
+- update Tizen Studio to 4.1.1
+- update webOS sdk to 1.11.0
+
+#### 1.0
+Initial version
 
 ## Development
 
