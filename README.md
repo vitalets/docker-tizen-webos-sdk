@@ -313,14 +313,14 @@ docker build -t vitalets/tizen-webos-sdk .
 ##### Fast way
 1. Download Tizen Studio installer to `vendor` dir (once):
     ```bash
-    TIZEN_STUDIO_VERSION=4.1.1; \
+    TIZEN_STUDIO_VERSION=4.1.1
     wget http://download.tizen.org/sdk/Installer/tizen-studio_${TIZEN_STUDIO_VERSION}/web-cli_Tizen_Studio_${TIZEN_STUDIO_VERSION}_ubuntu-64.bin \
     -O vendor/web-cli_Tizen_Studio_${TIZEN_STUDIO_VERSION}_ubuntu-64.bin
     ```
 
 2. Build container using local Tizen Studio installer:
     ```bash
-    TIZEN_STUDIO_VERSION=4.1.1; \
+    TIZEN_STUDIO_VERSION=4.1.1
     docker run -d --rm --name nginx-temp -p 8080:80 -v $(pwd)/vendor:/usr/share/nginx/html:ro nginx \
     && docker build -t vitalets/tizen-webos-sdk . \
       --build-arg TIZEN_STUDIO_URL=http://host.docker.internal:8080/web-cli_Tizen_Studio_${TIZEN_STUDIO_VERSION}_ubuntu-64.bin \
@@ -338,8 +338,12 @@ docker run --rm -it -v $(pwd):/usr/src jorgeandrada/doctoc --github README.md
 ```
 
 ### Publish to Docker Hub
+1. Check [existing tags](https://hub.docker.com/repository/docker/vitalets/tizen-webos-sdk/tags?page=1&ordering=last_updated) on docker hub.
+2. Set new tag and push to registry:
 ```bash
-docker push vitalets/tizen-webos-sdk
+TAG=1.0
+docker tag vitalets/tizen-webos-sdk:latest vitalets/tizen-webos-sdk:$TAG
+docker push vitalets/tizen-webos-sdk:$TAG
 ```
 
 ### Remove unused images
