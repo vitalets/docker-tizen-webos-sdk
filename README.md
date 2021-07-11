@@ -34,6 +34,7 @@ Available CLI commands:
     - [Build container](#build-container)
         - [Slow way](#slow-way)
         - [Fast way](#fast-way)
+    - [Update webOS sdk](#update-webos-sdk)
     - [Test](#test)
     - [Generate TOC](#generate-toc)
     - [Publish to Docker Hub](#publish-to-docker-hub)
@@ -323,9 +324,15 @@ docker build -t vitalets/tizen-webos-sdk .
     TIZEN_STUDIO_VERSION=4.1.1
     docker run -d --rm --name nginx-temp -p 8080:80 -v $(pwd)/vendor:/usr/share/nginx/html:ro nginx \
     && docker build -t vitalets/tizen-webos-sdk . \
-      --build-arg TIZEN_STUDIO_URL=http://host.docker.internal:8080/web-cli_Tizen_Studio_${TIZEN_STUDIO_VERSION}_ubuntu-64.bin \
+      --build-arg TIZEN_STUDIO_URL=http://172.17.0.1:8080/web-cli_Tizen_Studio_${TIZEN_STUDIO_VERSION}_ubuntu-64.bin \
     ; docker stop nginx-temp
     ```
+
+### Update webOS sdk
+1. Download [latest installer for linux](https://webostv.developer.lge.com/sdk/installation/download-installer/#)
+2. Unzip `webOS_SDK_TV_Installer_linux64_min.zip`
+3. Unzip again `webOS_SDK_TV_linux64.zip`
+4. Copy `webos_cli_tv.zip` to `vendor` dir
 
 ### Test
 ```bash
@@ -341,7 +348,7 @@ docker run --rm -it -v $(pwd):/usr/src jorgeandrada/doctoc --github README.md
 1. Check [existing tags](https://hub.docker.com/repository/docker/vitalets/tizen-webos-sdk/tags?page=1&ordering=last_updated) on docker hub.
 2. Set new tag and push to registry:
 ```bash
-TAG=1.0
+TAG=x.x
 docker tag vitalets/tizen-webos-sdk:latest vitalets/tizen-webos-sdk:$TAG
 docker push vitalets/tizen-webos-sdk:$TAG
 ```

@@ -64,8 +64,5 @@ RUN unzip -q webos_cli_tv.zip -d ${WEBOS_SDK_PATH} \
   && chmod -R +x ${WEBOS_SDK_PATH}/CLI/bin \
   && rm webos_cli_tv.zip
 
-# Replace lib/deviceInfo.js with patched version until it will be officially released
-COPY vendor/deviceInfo-patched.js ${WEBOS_SDK_PATH}/CLI/lib/deviceInfo.js
-
 # Add tizen/webos cli to PATH
 ENV PATH $PATH:/tizen-studio/tools/:/tizen-studio/tools/ide/bin/:/tizen-studio/package-manager/:${WEBOS_SDK_PATH}/CLI/bin
