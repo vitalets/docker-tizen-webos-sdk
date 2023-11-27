@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:22.04
 
 # Install prerequisites
 RUN apt-get update && apt-get install -y \
@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
   unzip \
   pciutils \
   locales \
-  libssl1.0.0 \
+  libssl-dev \
   # helper packages
   curl \
   net-tools \
@@ -36,7 +36,7 @@ WORKDIR ${HOME}
 # Tizen Studio must be installed in user home dir.
 # See: https://stackoverflow.com/questions/47269478/error-installing-tizen-studio-on-windows-10
 # See also: https://forum.developer.samsung.com/t/double-click-on-installer-tizen-studio-4-1-doesnt-launch-the-app-on-big-sure-11-3-1/13352/8
-ARG TIZEN_STUDIO_VERSION=4.1.1
+ARG TIZEN_STUDIO_VERSION=5.5
 ARG TIZEN_STUDIO_FILE=web-cli_Tizen_Studio_${TIZEN_STUDIO_VERSION}_ubuntu-64.bin
 ARG TIZEN_STUDIO_URL=http://download.tizen.org/sdk/Installer/tizen-studio_${TIZEN_STUDIO_VERSION}/${TIZEN_STUDIO_FILE}
 RUN wget ${TIZEN_STUDIO_URL} \
