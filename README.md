@@ -12,36 +12,36 @@ Available CLI commands:
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 
-- [docker-tizen-webos-sdk](#docker-tizen-webos-sdk)
-  - [Contents](#contents)
-  - [Requirements](#requirements)
-  - [Usage](#usage)
-  - [Samsung Tizen TV CLI](#samsung-tizen-tv-cli)
-    - [Get info about TV](#get-info-about-tv)
-    - [Connect to TV](#connect-to-tv)
-    - [List connected TVs](#list-connected-tvs)
-    - [Get TV capabilities](#get-tv-capabilities)
-    - [Get list of installed apps](#get-list-of-installed-apps)
-    - [Launch app on TV](#launch-app-on-tv)
-    - [Pack app](#pack-app)
-    - [Install app](#install-app)
-    - [Debug app](#debug-app)
-    - [Close app](#close-app)
-    - [Uninstall app](#uninstall-app)
-    - [Pack, install and launch app on TV in single command](#pack-install-and-launch-app-on-tv-in-single-command)
-  - [LG WebOS TV CLI](#lg-webos-tv-cli)
-  - [Changelog](#changelog)
-      - [2.0](#20)
-      - [1.0](#10)
-  - [Development](#development)
-    - [Build container](#build-container)
-        - [Slow way](#slow-way)
-        - [Fast way](#fast-way)
-    - [Update webOS sdk](#update-webos-sdk)
-    - [Test](#test)
-    - [Generate TOC](#generate-toc)
-    - [Publish to Docker Hub](#publish-to-docker-hub)
-    - [Remove unused images](#remove-unused-images)
+- [Requirements](#requirements)
+- [Usage](#usage)
+- [Samsung Tizen TV CLI](#samsung-tizen-tv-cli)
+  - [Get info about TV](#get-info-about-tv)
+  - [Connect to TV](#connect-to-tv)
+  - [List connected TVs](#list-connected-tvs)
+  - [Get TV capabilities](#get-tv-capabilities)
+  - [Get list of installed apps](#get-list-of-installed-apps)
+  - [Launch app on TV](#launch-app-on-tv)
+  - [Pack app](#pack-app)
+  - [Install app](#install-app)
+  - [Debug app](#debug-app)
+  - [Close app](#close-app)
+  - [Uninstall app](#uninstall-app)
+  - [Pack, install and launch app on TV in single command](#pack-install-and-launch-app-on-tv-in-single-command)
+- [LG WebOS TV CLI](#lg-webos-tv-cli)
+- [Changelog](#changelog)
+    - [3.0](#30)
+    - [2.0](#20)
+    - [1.0](#10)
+- [Development](#development)
+  - [Build container](#build-container)
+      - [Slow way](#slow-way)
+      - [Fast way](#fast-way)
+  - [Update webOS sdk](#update-webos-sdk)
+  - [Test](#test)
+  - [Debug](#debug)
+  - [Generate TOC](#generate-toc)
+  - [Publish to Docker Hub](#publish-to-docker-hub)
+  - [Remove unused images](#remove-unused-images)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -69,9 +69,10 @@ Smart Development Bridge version 4.2.12
 Version: 1.10.4-j1703-k
 ```
 
-> Container is intentionally started under the `root` user.
-  Starting under non-root user will cause [permissions issue](https://github.com/moby/moby/issues/2259)
-  when attaching volumes.
+Container is intentionally started under the `root` user. Starting under non-root user may cause [permissions issue](https://github.com/moby/moby/issues/2259) when attaching volumes. If you have problems with runnig tizen `package-manager` try to run container under `developer` user (see [#6](https://github.com/vitalets/docker-tizen-webos-sdk/issues/6)):
+```bash
+docker run --user developer -it --rm -v tvdata:/home/developer vitalets/tizen-webos-sdk bash
+```
 
 ## Samsung Tizen TV CLI
 ### Get info about TV
