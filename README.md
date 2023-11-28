@@ -308,6 +308,10 @@ docker run -it --rm \
 tbd
 
 ## Changelog
+#### 3.0
+- update Tizen Studio to 5.5
+- update webOS sdk to 1.12.4-j27
+
 #### 2.0
 - update Tizen Studio to 4.1.1
 - update webOS sdk to 1.11.0
@@ -323,16 +327,16 @@ Initial version
 docker build -t vitalets/tizen-webos-sdk .
 ```
 ##### Fast way
-1. Download Tizen Studio installer to `vendor` dir (once):
+1. Download Tizen Studio installer to `vendor` dir (change version if needed):
     ```bash
-    TIZEN_STUDIO_VERSION=4.1.1
+    TIZEN_STUDIO_VERSION=5.5
     wget http://download.tizen.org/sdk/Installer/tizen-studio_${TIZEN_STUDIO_VERSION}/web-cli_Tizen_Studio_${TIZEN_STUDIO_VERSION}_ubuntu-64.bin \
     -O vendor/web-cli_Tizen_Studio_${TIZEN_STUDIO_VERSION}_ubuntu-64.bin
     ```
 
-2. Build container using local Tizen Studio installer:
+2. Build container using downloaded Tizen Studio installer (change version if needed):
     ```bash
-    TIZEN_STUDIO_VERSION=4.1.1
+    TIZEN_STUDIO_VERSION=5.5
     docker run -d --rm --name nginx-temp -p 8080:80 -v $(pwd)/vendor:/usr/share/nginx/html:ro nginx \
     && docker build -t vitalets/tizen-webos-sdk . \
       --build-arg TIZEN_STUDIO_URL=http://172.17.0.1:8080/web-cli_Tizen_Studio_${TIZEN_STUDIO_VERSION}_ubuntu-64.bin \
@@ -340,14 +344,24 @@ docker build -t vitalets/tizen-webos-sdk .
     ```
 
 ### Update webOS sdk
-1. Download [latest installer for linux](https://webostv.developer.lge.com/sdk/installation/download-installer/#)
-2. Unzip `webOS_SDK_TV_Installer_linux64_min.zip`
-3. Unzip again `webOS_SDK_TV_linux64.zip`
-4. Copy `webos_cli_tv.zip` to `vendor` dir
+1. Download [latest installer for linux](https://webostv.developer.lge.com/develop/tools/cli-installation) and move it to `vendor` folder
+2. In `Dockerfile` change `WEBOS_CLI_VERSION` to corresponding version
+3. Build docker image
 
 ### Test
 ```bash
 ./test.sh
+```
+
+### Debug
+```
+docker run -it --rm --platform linux/amd64 -v /home/developer vitalets/tizen-webos-sdk bash
+```
+And check sdk commands, e.g.:
+```
+tizen version
+# or
+ares-setup-device --version
 ```
 
 ### Generate TOC

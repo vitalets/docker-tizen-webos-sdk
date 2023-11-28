@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM --platform=linux/amd64 ubuntu:22.04
 
 # Install prerequisites
 RUN apt-get update && apt-get install -y \
@@ -58,11 +58,14 @@ RUN mv ${HOME}/tizen-studio /tizen-studio \
   && ln -s /tizen-studio ${HOME}/tizen-studio
 
 # Copy and extract webOS CLI
-ARG WEBOS_SDK_PATH=/webOS_TV_SDK
-COPY vendor/webos_cli_tv.zip .
-RUN unzip -q webos_cli_tv.zip -d ${WEBOS_SDK_PATH} \
-  && chmod -R +x ${WEBOS_SDK_PATH}/CLI/bin \
-  && rm webos_cli_tv.zip
+ARG WEBOS_CLI_VERSION=1.12.4-j27
+ENV LG_WEBOS_TV_SDK_HOME=/webOS_TV_SDK
+ENV WEBOS_CLI_TV=${LG_WEBOS_TV_SDK_HOME}/CLI/bin
+COPY vendor/webOS_TV_CLI_linux_${WEBOS_CLI_VERSION}.tgz ./webos_cli.tgz
+RUN mkdir -p ${LG_WEBOS_TV_SDK_HOME}
+RUN tar -xvzf webos_cli.tgz -C ${LG_WEBOS_TV_SDK_HOME} \
+  && chmod -R +x ${WEBOS_CLI_TV} \
+  && rm webos_cli.tgz
 
 # Add tizen/webos cli to PATH
-ENV PATH $PATH:/tizen-studio/tools/:/tizen-studio/tools/ide/bin/:/tizen-studio/package-manager/:${WEBOS_SDK_PATH}/CLI/bin
+ENV PATH $PATH:/tizen-studio/tools/:/tizen-studio/tools/ide/bin/:/tizen-studio/package-manager/:${WEBOS_CLI_TV}

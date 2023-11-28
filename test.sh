@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 cmd() {
-  echo $(docker run -it --rm -v /home/developer vitalets/tizen-webos-sdk $@) | tr -d '\r'
+  echo $(docker run -it --rm --platform linux/amd64 -v /home/developer vitalets/tizen-webos-sdk $@) | tr -d '\r'
 }
 
 assert() {
@@ -16,5 +16,5 @@ assert() {
 }
 
 assert "$(cmd tizen version)" "Tizen CLI 2.5.25"
-assert "$(cmd sdb version)" "Smart Development Bridge version 4.2.16"
-assert "$(cmd ares-setup-device --version)" "Version: 1.11.0-j31-k"
+assert "$(cmd sdb version)" "Smart Development Bridge version 4.2.25"
+assert "$(cmd ares -V)" "webOS TV CLI Version: 1.12.4-j27"

@@ -2,5 +2,5 @@
 .idea
 .vscode
 
-/vendor/web-cli_Tizen_Studio_*
+/vendor
 /todo.txt
