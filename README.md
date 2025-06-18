@@ -210,8 +210,8 @@ tizen package -t wgt -o /home/developer -- /app
 Output:
 ```
 The active profile is used for signing. If you want to sign with other profile, please use '--sign' option.
-Author certficate: /home/developer/author.p12
-Distributor1 certificate : /home/developer/tizen-studio/tools/certificate-generator/certificates/distributor/tizen-distributor-signer.p12
+Author certificate: /home/developer/author.p12
+Distributor certificate : /home/developer/tizen-studio/tools/certificate-generator/certificates/distributor/tizen-distributor-signer.p12
 Excludes File Pattern: {.manifest.tmp, .delta.lst}
 Ignore File: /app/.manifest.tmp
 Package File Location: /home/developer/MyTvApp.wgt
